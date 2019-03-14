@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+    1、v-for   循环遍历
+	2、v-on:click  点击事件  （另外一种写法就是@click）
+    3、v-model   数据绑定
+    4、methods:   methods 将被混入到 Vue 实例中。可以直接通过 VM 实例访问这些方法，或者在指令表达式中使用。方法中的 this 自动绑定为 Vue 实例。
+        在methods属性中创建方法，dom触发事件执行的function
+    5、push  push方法——>更新数据？？？？？百度无果，稍后问大佬
+-->
+<body>
+    <div id="app">
+        <input type="text" v-model='inputValue'>
+        <button v-on:click="myclick">提交</button>
+        <ul>
+            <li v-for="item in list">{{item}}</li>
+        </ul>
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                list:[],
+				inputValue:''
+            },
+            methods:{
+                myclick:function(){
+                    this.list.push(this.inputValue);
+                    this.inputValue = '';
+				}
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="JavascriptNative"></div>
+    <div id="app">{{content}}</div>
+    <script>
+        let A = document.getElementById('JavascriptNative');
+        A.innerHTML = 'hello world';
+        setTimeout(function () {
+            A.innerText = 'goodbye';
+        },2000)
+    </script>
+    <script>
+        var app = new Vue({
+            el:'#app',    //el表示其接管的范围
+            data:{        //data定义一些数据
+                content:'hello world'
+            }
+        });
+        setTimeout(function () {
+            app.$data.content = 'goodbye';
+        },2000)
+    </script>
+</body>
+</html>
