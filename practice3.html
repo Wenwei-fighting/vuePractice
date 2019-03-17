@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+全局组件：
+       1、Vue.component("组件名",{
+             props:[],       ——>props数据绑定，绑定v-bind的属性名，子组件就可以通过props去接收传输的值
+             template:``     ——>template为模板，即你创立的组件标签的模板
+          })
+       2、v-bind:属性名=""  ——>这里的属性名为自定义，而""号内的为预期值
+             假如这里我命名为v-bind:input_content="invalue"，则预期值invalue与v-for="invalue in list"中的invalue进行数据绑定，list通过循环遍历把值赋给invalue，再通过v-bind的invalue传递给子组件
+
+
+         所以整条传递链是这样的
+                v-for='x in list' ——>    v-bind:y='x'    ——>    子组件的props:['y']，最后template模板中的查值表达式{{y}}
+
+
+局部组件：
+        1、var 组件名 = {
+              props:[],
+              template:``
+           }
+        2、然后通过Vue实例注册
+        var app = new Vue({
+            el:'',
+            components:{
+               组件名：组件名          ——>通过components属性来声明，components:[组件名]，不过局部组件最好使用对象来注册
+            },
+            data:{},
+            methods:{}
+        })
+-->
+<body>
+    <div id="app">
+        <input type="text" v-model="myvalue">
+        <button @click="btn_click">按钮</button>
+        <ul>
+            <!--<li v-for="invalue in list">{{invalue}}</li>-->
+            <globallist v-for="invalue in list"
+                    v-bind:input_content="invalue">
+            </globallist>
+
+        </ul>
+        <ul>
+            <locallist v-for="invalue in list"
+                       v-bind:input_content="invalue">
+            </locallist>
+        </ul>
+    </div>
+    <script>
+        <!--全局组件-->
+        Vue.component('globallist',{
+            props:['input_content'],
+            template:`<li>{{input_content}}</li>`
+        });
+
+        <!--局部组件-->
+        var locallist = {
+            props:['input_content'],
+            template:`<li>{{input_content}}</li>`
+        };
+
+        <!--注册Vue实例-->
+        var app = new Vue({
+            el:'#app',
+            components:{
+                locallist:locallist
+            },
+            data:{
+                list:[],
+                myvalue:''
+            },
+            methods:{
+                btn_click:function () {
+                    this.list.push(this.myvalue);
+                    this.myvalue = '';
+                }
+            }
+        })
+    </script>
+</body>
+</html>

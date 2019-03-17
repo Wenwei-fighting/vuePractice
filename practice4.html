@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+        子组件往父组件传输数据
+        因为vue.js是通过改变数据去渲染页面
+
+        如我写的代码的关系链：
+            子组件的@click事件 ——> 子组件的methods属性中的定义的click_delete的方法，this.$emit('delete_li'，this.pointer)  ——>  监听delete_li事件触发父组件的click_delete事件   ——>   父组件的methods属性中的定义click_delete的方法执行
+
+        那么数据应该是这样传递的：
+            v-for="(item,num) in list"  ——>  v-bind:pointer="num"  ——>   子组件的props:['content','pointer']  ——>   click_delete：function(){}  ——>   Vue实例的click_delete:function(){}   ——>最后操作data中的list
+
+
+        实现过程：
+        1、先在子组件模板中声明一个@事件='自定义事件'
+        2、子组件methods属性中定义一个自定义事件中添加方法
+        3、在方法中this.$emit('自定义事件',参数)触发父组件的事件
+        4、子组件上添加@自定义事件="父组件事件"
+        5、父组件methods属性中定义一个父组件事件中添加方法
+
+
+        @event                       为监听事件,event为自定义事件
+        $emit(event,arg)             触发父组件的自定义事件，event为父组件的自定义事件，arg是参数
+        splice(index,howmany,item)   从数组中代替数据，index是删除位置，howmany是数据数量，item为代替的新数据，如果item为空则为删除。
+
+-->
+<body>
+    <div id="box">
+        <input type="text" v-model="input_value">
+        <button @click="btn_click">提交</button>
+        <ul>
+            <!--<li v-for="item in list">{{item}}</li>-->
+            <outli v-for="(item,num) in list"
+                   v-bind:content="item"
+                   v-bind:pointer="num"
+                   @delete_li="click_delete">
+            </outli>
+        </ul>
+    </div>
+
+    <script>
+        Vue.component('outli',{
+            props:['content','pointer'],
+            template:`<li @click="click_delete">{{content}}</li>`,
+            methods: {
+                click_delete:function () {
+                    this.$emit('delete_li',this.pointer);
+                }
+            }
+        });
+
+        let box = new Vue({
+            el:'#box',
+            data:{
+                list:[],
+                input_value:''
+            },
+            methods:{
+                btn_click:function () {
+                    this.list.push(this.input_value);
+                    this.input_value = '';
+                },
+                click_delete:function (pointer) {
+                    this.list.splice(pointer,1);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
