@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue的生命周期函数</title>
+    <script src="vue.js"></script>
+    <style>
+        img{
+            width: 50%;
+        }
+    </style>
+</head>
+<!--
+    生命周期函数就是Vue实例在某一个时间点会自动执行的函数
+
+
+    实例化一个Vue实例的整个生命周期
+    1、new Vue()  ——>
+    2、初始化事件和生命周期  ——>
+    3、执行第一个生命周期函数beforeCreate  ——>
+    4、初始化注入和反应  ——>
+    5、执行第二个生命周期函数created  ——>
+    6、有没有el（挂载点） ——>
+    7、有则继续看有没有template（模板） ——>
+    8、没有则默认使用el的外层的html作为模板进行渲染，有则按照template进行渲染（此时还没有进行渲染） ——>
+    9、执行第三个生命周期函数beforeMount（模板和数据相结合，即将挂载在网页上前一刻执行） ——>
+    10、页面进行渲染，数据和模板相结合，挂载到网页上  ——>
+    11、执行第四个生命周期函数mounted   ——>
+    12、Mounted
+            （1）如果执行$destroy() ——>
+                执行生命周期函数beforeDestroy  ——>
+                拆卸监视程序、子组件和事件侦听器 ——>
+                执行生命周期函数destroy  ——>
+                Vue实例被销毁
+
+            （2）如果数据改变了 ——>
+                执行生命周期函数beforeUpdate  ——>
+                重新渲染网页  ——>
+                执行生命周期函数updated  ——>
+                继续回到Mounted等待  ——>
+-->
+<body>
+    <div id="box"></div>
+    <img src="lifecycle.png" alt="">
+    <script>
+        var vm = new Vue({
+            el:'#box',
+            template:`<div>{{content}}</div>`,
+            data:{
+                content:'Vue实例的整个生命周期'
+            },
+            beforeCreate:function () {
+                console.log("第一个生命周期函数beforeCreate,创建前");
+                console.log(this.$el);
+                console.log(this.$data);
+            },
+            created:function () {
+              console.log("第二个生命周期函数created，创建完成");
+              console.log(this.$el);
+              console.log(this.$data);
+            },
+            beforeMount:function () {
+                console.log("第三个生命周期函数beforeMount，渲染前");
+                console.log(this.$el);                      //查看当前的el挂载点的dom，此时应该是没有进行渲染
+                console.log(this.$data);
+            },
+            mounted:function () {
+                console.log("第四个生命周期函数mounted，渲染完成");
+                console.log(this.$el);                      //查看当前的el挂载点的dom，此时应该渲染完成
+                console.log(this.$data);
+            },
+            beforeUpdate:function () {
+                console.log("第五个生命周期函数beforeUpdate，数据改变时");
+            },
+            updated:function () {
+                console.log("第六个生命周期函数updated，重新渲染");
+            },
+            beforeDestroy:function () {
+                console.log("第七个生命周期函数beforeDestroy，删除实例前");
+                console.log(this.$el);                      //查看当前的el挂载点的dom
+                console.log(this.$data);
+            },
+            destroyed:function () {
+                console.log("第八个生命周期函数destroyed，删除实例完成");
+                console.log(this.$el);                      //查看当前的el挂载点的dom
+                console.log(this.$data);
+            }
+        })
+    </script>
+</body>
+</html>
