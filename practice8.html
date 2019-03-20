@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性中的setter和getter</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+
+    当我们使用computed计算属性时，将数据用对象的形式实现，添加get、set方法，当
+    我们不改变这个数据所使用的数据时，数据所依赖的get方法将不会执行，这是computed
+    的特性，结果是不会重新渲染页面，而当我们在set方法里写入改变这个数据所使用的数据
+    的相关操作时，通过改变这个数据，从而改变这个数据所使用的数据，最后达到调用get方法
+    重新渲染页面。
+
+-->
+<body>
+    <div id="app">{{alldata}}</div>
+    <script>
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                firstdata:'爱情',
+                seconddata:'面包'
+            },
+            computed:{
+                alldata:{
+                    get:function () {
+                        return this.firstdata + ' ' + this.seconddata;
+                    },
+                    set:function (value) {
+                        var datalsit = value.split(" ");
+                        this.firstdata = datalsit[0];
+                        this.seconddata = datalsit[1];
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
