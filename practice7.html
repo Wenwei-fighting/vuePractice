@@ -2,9 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>计算属性，方法和侦听器</title>
+    <script src='vue.js'></script>
 </head>
+<!--
+    computed计算属性，含有缓存机制，可以通过多个数据的操作计算出一个你所需要的数据，当你使用
+    的数据是通过使用其他数据所表示的，而当使用的那部分数据没有发生改变的时候，你改变与此无关的
+    数据，页面重新渲染的时候，将不再调用computed中的方法。
+
+    methods方法，同样可以达到通过多个数据的操作计算出一个你所需要的数据，但是页面每当重新渲染
+    的时候，都会再次调用methods中的方法，无论所使用的数据有无发生改变。（注意，使用methods时需要名称+()）
+
+    watch侦听器，和computed相同，但是稍微复杂些，需要监听多个数据的改变最后去确定计算所需的数据
+
+    当实现同一个功能中，这三个都可以使用时，computed为最优
+-->
 <body>
-$END$
+    <div id="app">
+        <div>{{string_joint1}}{{thirddata}}</div>
+
+        <div>{{string_joint2()}}{{thirddata}}</div>
+
+        <div>{{alldata}}{{thirddata}}</div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                firstdata:'我',
+                seconddata:'你',
+                thirddata:'他',
+                alldata:'我 你'
+            },
+            //计算属性   缓存机制，当相关数据没有改变则不会再次计算
+            computed:{
+                string_joint1:function () {
+                    console.log('computed的方法执行了一次');
+                    return this.firstdata + " " + this.seconddata;
+                }
+            },
+            //方法
+            methods:{
+                string_joint2:function () {
+                    console.log('methods的方法执行一次');
+                    return this.firstdata + " " + this.seconddata;
+                }
+            },
+            //侦听器
+            watch:{
+                firstdata: function () {
+                    console.log('侦听器中的firstdata的方法执行一次');
+                    this.alldata = this.firstdata + " " + this.seconddata;
+                },
+                seconddata: function () {
+                    console.log('侦听器中的seconddata的方法执行一次');
+                    this.alldata = this.firstdata + " " + this.seconddata;
+                }
+            }
+        })
+    </script>
 </body>
 </html>
