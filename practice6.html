@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板语法</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+    {{}}      ——>  查值表达式，查询Vue实例中data的属性值
+    v-text    ——>  和{{}}查值表达式一样的作用，没有经过任何处理直接输出文本原来的样子
+    v-html    ——>  会经过处理转译为html后输出
+
+    区别：
+        这三者的用法基本相同，且内容都可以使用JS表达式，不仅仅是变量，而不同的在于v-html会进行编译后输出。
+-->
+<body>
+    <div id="app">
+        <div>{{name + ' 我笑了'}}</div>
+        <div v-text="name + ' 我笑了'"></div>
+        <div v-html="name + ' 我笑了'"></div>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                name:"<h1>哈哈哈哈哈</h1>"
+            }
+        })
+    </script>
+</body>
+</html>
