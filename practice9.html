@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue中的样式绑定</title>
+    <script src="vue.js"></script>
+    <style>
+        .activated{
+            color: red;
+        }
+        .redclass{
+            background-color: red;
+        }
+        .blueclass{
+            color: blue;
+        }
+        .pinkclass{
+            background-color: pink;
+        }
+    </style>
+</head>
+<!--
+    :是v-bind的缩写，加上了冒号是为了动态绑定数据，等号后面可以写变量。如果不使
+          用冒号，等号后面就可以写字符串等原始类型数据，这时就无法进行动态绑定数据了。
+          本质上后面的就是JS表达式。
+
+    1、第一种class的对象绑定：
+
+          第一步
+          <div :class="{activated: isActivated}"></div>
+          意思是div上有一个class，class的值activated，而是否显示activated取决于isActivated这个变量
+
+          第二步
+          在Vue实例的data中添加isActivated这个变量，赋值为false
+
+          第三步
+          在Vue实例的methods中添加一个点击的方法，使isActivated变为true，则activated便会显示出来
+
+          第四步
+          在所需要点击的标签添加@click="方法名"，最后则会显示class = activated 的样式
+
+
+    2、第二种class的变量绑定：
+
+          第一步
+          <div :class="activeClass"></div>
+          意思是div上有一个class，class的值activeClass这个变量
+
+          第二步
+          在Vue实例的data中添加activeClass这个变量
+
+          第三步
+          在Vue实例的methods中添加一个点击的方法，使activeClass的值发生改变，变为另外一个类名
+
+          第四步
+          在所需要点击的标签添加@click="方法名"，最后则会显示切换后的样式
+
+
+    3、第三种class的数组绑定
+
+          第一步
+          <div :class="[activeClass,errorClass]"></div>
+          意思是div上有一个class，class的值activeClass这个变量
+
+          第二步
+          在Vue实例的data中添加activeClass和errorClass这两个变量
+
+          第三步
+          在Vue实例的methods中添加一个点击的方法，使activeClass或errorClass的值发生改变，变为其他类名
+
+          第四步
+          在所需要点击的标签添加@click="方法名"，最后则会显示切换后的样式
+
+          还有一种用法就是根据条件切换class，直接用三目运算表达为：
+          <div :class="[ isActive ? activeClass : '' , errorClass ]"></div>
+          变成if语句就是
+
+          if（isActive）
+             activeClass;
+          else
+             '';
+
+          如果是多个条件的class直接用对象<div :class="[ { activeClass:isActive } , errorClass ]"></div>
+
+
+    4、第四种style的对象绑定
+
+            第一步
+            <div :style="styleObj"></div>
+            意思是div上有一个style，style是一个styleObj的对象
+
+            第二步
+            在Vue实例的data中添加styleObj这个对象，且添加你所需要的各种CSS属性作为styleObj的属性
+            styleObj:{
+                color : "red",
+                margin : "20px",
+                ...等等
+            }
+
+            第三步
+            在Vue实例的methods中添加一个点击的方法，使styleObj的属性发生变化
+
+            第四步
+            在所需要点击的标签添加@click="方法名"，最后则会显示切换后的样式
+
+            也可以使用数组的形式直接就是，还可以加其他的,其他的步骤一样的。
+            <div :style="[styleObj,{fontSize : '20px'}]"></div>
+-->
+<body>
+    <div id="app">
+        <div :class="{activated: isActivated}">hello world</div>
+        <button @click="btnone_click">改变样式</button>
+
+        <p></p>
+
+        <div :class="activeClass">hello world</div>
+        <button @click="btntwo_click">改变样式</button>
+
+        <p></p>
+
+        <div :class="[activeClass,errorClass]">hello world</div>
+        <button @click="btnthree_click">改变样式</button>
+
+        <p></p>
+
+        <div :style="styleObj">hello world</div>
+        <button @click="btnfour_click">改变样式</button>
+
+        <p></p>
+
+        <div :style="[styleObj,{fontSize : '20px'}]">hello world</div>
+        <button @click="btnfour_click">改变样式</button>
+    </div>
+    <script>
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                isActivated: false,
+                activeClass: 'redclass',
+                errorClass: 'blueclass',
+                styleObj:{
+                    color: "yellow",
+                    backgroundColor: "green"
+                }
+            },
+            methods:{
+                btnone_click:function () {
+                    this.isActivated = !this.isActivated;
+                },
+                btntwo_click:function () {
+                    this.activeClass = "";
+                },
+                btnthree_click:function () {
+                    this.activeClass = "pinkclass";
+                },
+                btnfour_click:function () {
+                    this.styleObj.color = "pink";
+                }
+            }
+        })
+    </script>
+</body>
+</html>
