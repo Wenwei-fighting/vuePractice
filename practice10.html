@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue中的条件渲染</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+       v-if    ——>    v-if="变量",当变量的值等于false时，通过F12会发现页面将
+       不会把这个标签挂载到页面上，只有为true才会显示出来
+
+       v-show    ——>   v-show="变量",与v-show的用法一样，但是区别在于当值为false
+       时，这个标签并没有消失，而是加上了style="display: none"
+
+       v-else  ——>   与v-if相对应，不过后面不需要加任何变量，直接给标签添加v-else。
+       但是需要注意的是，v-else和与v-if的标签需要紧挨在一起，中间不能有其他标签，否则
+       将报错。
+
+       v-else-if  ——>  既然有v-if和v-else那么也有v-else-if，应用于复杂判断，与我们学
+       的if、else if、else一样。当执行v-if时为错时则继续往下判断v-else-if，仍未错时那么
+       将执行v-else。
+       
+       key值的概念引入，当我们使用条件渲染时，如果v-if与v-else中有相同的标签，Vue的机制会
+       劲量复用相同的标签，而不是去删除后再添加，性能上得到优化。但是这会造成一个什么后果呢，
+       如下面代码，当我们里面是input标签时，当我们输入一些东西，我们通过操作将判断值改变不挂
+       载v-if的标签，挂载v-else的标签，这时input中的值并没有清空，而是保留。
+       而key的使用就是让vue知道这个标签时独一无二的，将不再复用，是Vue中的虚拟DOM的技术中的内容。
+
+-->
+<body>
+    <div id="app">
+        <div v-if="Booldata === 'a'">Bool值为a</div>
+        <div v-else-if="Booldata ==='b'">Bool值为b</div>
+        <div v-else>Bool值不是a，也不是b</div>
+        
+        <div v-show="show">{{message}}</div>
+        
+        <div v-if="show">{{message}}</div>
+        <div v-else>判断的变量为空</div>
+
+        <div v-if="professional === 'teacher'">
+            工号：<input type="text" key="teacherNumber">
+        </div>
+        <div v-else>
+            学号：<input type="text" key="studentNumber">
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                message: '我出现了',
+                show: false,
+                Booldata: 'a',
+                professional: 'teacher'
+            }
+        })
+    </script>
+</body>
+</html>
