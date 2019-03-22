@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue中的列表循环</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+        这里继续上一次的key值的继续讲解，当我们收到后端的API接口
+        接收回来的数据，一般是以对象的形式，存在多个属性，我们存
+        储到数组中，而我们循环遍历数组，使用key值时是不推荐绑定的是
+        指针，对于频繁操作这个DOM元素相对应的数据时，比较消耗性能，
+        Vue则没有办法充分复用DOM节点，通常推荐这个数据的唯一标识符
+        作为key值，比如id。
+
+        使用v-for列表循环的时候推荐附带key值，这样使得性能较好，而
+        想要性能最优则劲量使用唯一且不是index作为key值
+
+
+
+        在Vue中对于数组list的操作，我们不可以直接使用下标的形式去操作，
+        这样直接操作，虽然数据变了，但是Vue不会重新渲染页面。
+
+        在Vue中提供了：push、pop、shift、unshift、splice、sort、reverse去操作数组
+
+        1、push()         ——>      ush(newelement1,newelement2,...,newelementX)
+                                   往数组末尾添加元素
+                                   newelement1                    必需，你要添加的第一个元素
+                                   newelement2,...,newelementX    可选，你要添加的多个元素
+
+        2、pop()          ——>      pop()
+                                   删除最后一个元素，并且返回被删除元素的值
+
+        3、shift()        ——>      shift()
+                                   删除第一个元素，并且返回被删除元素的值
+
+        4、unshift()      ——>      unshift(newelement1,newelement2,...,newelementx)
+                                   往数组开头添加元素
+                                   newelement1                    必需，你要添加的第一个元素
+                                   newelement2,...,newelementX    可选，你要添加的多个元素
+
+        5、splice()       ——>      splice(index,howmany,item1,...,itemx)
+                                   index            必需，为整数，指向你要删除的位置
+                                   howmany          必需，为你要删除的数量，为0时不删除
+                                   item1,...,itemx  可选，向数组添加的元素
+
+        6、sort()         ——>      sort(sortby)
+                                   对数组的元素进行排序，直接操作原数组
+                                   sortby       可选，规定排序顺序，必需是函数
+                                   函数为：
+                                   function 自定义命名(a,b){
+                                        return a - b;
+                                   }
+                                   若 a 小于 b，在排序后的数组中 a 应该出现在 b 之前，则返回一个小于 0 的值。
+                                   若 a 等于 b，则返回 0。
+                                   若 a 大于 b，则返回一个大于 0 的值。
+                                   如果没有sortby，那么将按照字符编码的顺序进行排序
+
+
+        7、reverse()      ——>      reverse()
+                                   颠倒数组中元素的顺序
+
+
+        还有一个方法，就是改变list的引用，直接this.list = 新的数组，也可以使Vue重新渲染页面。
+
+        当我们有多个标签参与循环遍历时，可以外层使用一个div包裹这些需要循环的标签，但是问题是
+        这样渲染出来将会以一个大div包裹几个标签的形式，如果不想要使用div包裹我们可以使用template
+        占位符进行包裹，当渲染时，template这个标签将不会出现。
+
+
+
+        相同的我们用v-for去遍历渲染对象的时候，我们除了item以为其实还有key和index格式为
+        v-for="(item, key, index)"    其顺序为item为属性值，key为属性，index为指针，顺序不可变
+
+        当我们操作对象的改变其属性值得时候，Vue会重新渲染页面，但是如果通过.操作添加或者delete操作
+        删除属性，Vue并不会重新渲染页面，只能通过改变对象的引用，才能重新渲染。
+-->
+<body>
+    <div id="app">
+        <p>----------------遍历数组----------------------</p>
+        <div  v-for="( item, index ) of list"
+              :key="item.id">
+            <div>
+                {{item.text}}-----{{index}}
+            </div>
+            <span>
+                {{item.text}}
+            </span>
+        </div>
+
+        <p>`---------------使用template标签遍历数组后渲染----------------------`</p>
+
+        <template  v-for="( item, index ) of list"
+              :key="index">
+            <div>
+                {{item.text}}-----{{index}}
+            </div>
+            <span>
+                {{item.text}}
+            </span>
+        </template>
+
+        <p>----------------遍历对象----------------------</p>
+
+        <div  v-for="( item, key, index ) of userInfo"
+                   :key="index">
+            {{key}}-------{{item}}---------{{index}}
+        </div>
+
+    </div>
+
+    <script>
+
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                list: [{
+                    id: "10010",
+                    text: "hello",
+                },{
+                    id: "10011",
+                    text: "dell",
+                },{
+                    id: "10012",
+                    text: "nice",
+                },{
+                    id: "10013",
+                    text: "meet",
+                },{
+                    id: "10014",
+                    text: "to",
+                },{
+                    id: "10015",
+                    text: "you",
+                }],
+                userInfo: {
+                    name: 'Wen',
+                    age: 23,
+                    sex: 'man',
+                    education_background: 'college'
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
