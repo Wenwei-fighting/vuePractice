@@ -21,7 +21,7 @@
         在Vue中对于数组list的操作，我们不可以直接使用下标的形式去操作，
         这样直接操作，虽然数据变了，但是Vue不会重新渲染页面。
 
-        在Vue中提供了：push、pop、shift、unshift、splice、sort、reverse去操作数组
+        在Vue中提供了：push、pop、shift、unshift、splice、sort、reverse这七种变异方法去操作数组
 
         1、push()         ——>      ush(newelement1,newelement2,...,newelementX)
                                    往数组末尾添加元素
@@ -72,8 +72,8 @@
         相同的我们用v-for去遍历渲染对象的时候，我们除了item以为其实还有key和index格式为
         v-for="(item, key, index)"    其顺序为item为属性值，key为属性，index为指针，顺序不可变
 
-        当我们操作对象的改变其属性值得时候，Vue会重新渲染页面，但是如果通过.操作添加或者delete操作
-        删除属性，Vue并不会重新渲染页面，只能通过改变对象的引用，才能重新渲染。
+        当我们操作对象的改变其属性值得时候，Vue会重新渲染页面，但是如果通过对象的.操作添加或者delete操作
+        删除属性，Vue并不会重新渲染页面，还能通过改变对象的引用，达到重新渲染。
 -->
 <body>
     <div id="app">
