@@ -34,7 +34,6 @@
         <input type="text" v-model="input_value">
         <button @click="btn_click">提交</button>
         <ul>
-            <!--<li v-for="item in list">{{item}}</li>-->
             <outli v-for="(item,num) in list"
                    v-bind:content="item"
                    v-bind:pointer="num"
