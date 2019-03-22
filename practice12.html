@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue中的set、delete方法，操作对象和数组</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+
+    上次我们说到数组和对象遍历渲染，Vue实例的数组7种变异方法和改变数组
+    和对象的引用，可以达到重新渲染页面的效果。
+
+    除此之外Vue还提供了Vue.set()、Vue.delete()、Vue实例.$set()、Vue实例.$delete()
+    这个4种方法去操作数组及对象，从而达到重新渲染页面的效果。
+
+    数组lsit：
+    Vue.set( Vue实例.数组lsit, index指针, 值)
+    Vue.delete( Vue实例.数组lsit, index指针)
+    Vue实例.$set( Vue实例.数组lsit, index指针, 值)
+    Vue实例.$delete( Vue实例.数组lsit, index指针)
+
+    对象object:
+    Vue.set( Vue实例.对象object, key属性名, 值)
+    Vue.delete( Vue实例.数组lsit, key属性名)
+    Vue实例.$set( Vue实例.数组lsit, key属性名, 值)
+    Vue实例.$delete( Vue实例.数组lsit, key属性名)
+
+
+-->
+<body>
+    <div id="app">
+        <P>--------------遍历数组-----------------------</P>
+        <div v-for="(item,index) of list"
+             :key="index">
+            {{item}}------{{index}}
+        </div>
+
+        <P>--------------遍历对象-----------------------</P>
+        <div v-for="(item,key,index) of userInfo"
+             :key="key">
+            {{key}}-------{{item}}------{{index}}
+        </div>
+    </div>
+    <script>
+         var vm = new Vue({
+             el: '#app',
+             data: {
+                 list: [ 1, 2, 3, 4, 5, 6],
+                 userInfo: {
+                     name: 'Wen',
+                     age: 18,
+                     address: '中国',
+                     sex: '男'
+                 }
+             }
+         })
+    </script>
+</body>
+</html>
