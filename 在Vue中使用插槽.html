@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在Vue中使用插槽</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<!--
+    插槽：
+        在Vue中我们创建子组件时，不一定所有便签都写入子组件模板中，那当我们需要
+        在子组件插入便签是，那我们就要应用到插槽的概念。
+
+        当我们如果直接在组件内直接写标签是，会直接被转译，而不是变成一个标签
+
+        插槽slot：
+        1、首先在模板中在你需要插入的标签
+        template: `
+                    ..........
+                    <slot></slot>
+                  `
+        2、在组件内添加标签：
+        <componentName>
+            <需要插的标签></需要插的标签>
+        </componentName>
+
+        但是如果需要添加多个标签的时候，需要插到指定位置时，那么就要使用具名插槽
+        在slot标签添加name属性，在需要插入的标签添加slot属性，两者要相同。
+
+        <p slot="header">word</p>
+        template: `
+                    ..........
+                    <slot name="header"></slot>
+                  `
+
+
+-->
+<body>
+    <div id="app">
+        <component-a>
+            <p slot="header">word</p>
+            <p slot="footer">bye</p>
+        </component-a>
+    </div>
+
+    <script>
+
+        let componentA = {
+            template: `<div>
+                            <slot name="header">这里是默认插槽1</slot>
+                            <p>hello</p>
+                            <slot name="footer">这里是默认插槽2</slot>
+                       </div>`,
+
+        };
+
+        let vm = new Vue({
+            el: "#app",
+            components:{
+                componentA : componentA
+            }
+        });
+    </script>
+</body>
+</html>

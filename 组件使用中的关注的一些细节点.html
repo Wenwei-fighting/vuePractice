@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件使用中的一些细节点</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <!--<div id="root">
+        <span>Vue的</span>
+        <table>
+            <tbody>
+            <row></row>
+            <row></row>
+            <row></row>
+            </tbody>
+        </table>
+        <img src="img/组件使用的细节2.png" alt="">
+    </div>-->
+    <!--以上是BUG代码-->
+    <!--一下是修复代码-->
+    <div id="root">
+        <table>
+            <tbody>
+                <tr is="row"></tr>
+                <tr is="row"></tr>
+                <tr is="row"></tr>
+            </tbody>
+        </table>
+        <img src="img/组件使用的细节1.png" alt="">
+    </div>
+    <hr>
+    <div id="app">
+        <component-b ref="component_one" @numberchange="sumchange"></component-b>
+        <component-b ref="component_two" @numberchange="sumchange"></component-b>
+        <div>{{sum}}</div>
+    </div>
+    <!--
+        细节1：
+        这里会出现BUG，本来应该说我们的组件row是出现在tbody里的，
+        原因：
+            tbody的定义和用法中，tbody 元素应该与 thead 和 tfoot 元素结合起来使用。
+            tbody内只允许是thead、tfoot，其他一律丢出去。
+            在第一个我尝试将P标签插入tbody中，最后解析出来的P标签在tbody之外，所以
+            我们将组件插入tbody中，文档解析我们的代码时认为我们组件不是thead或tfoot
+            所以也丢出了外面
+
+        解决办法:
+            使用is命令，将便签变为原来的tr标签，添加is="组件名" ————> <tr is="row"></tr>
+
+        细节2：
+        各个组件中的值得获取，例如两个button中的值相加
+        因为各个组件中的data值独立，所以如何去指定获取组件中的值，通过子组件传值给父组件，然后
+        父组件的函数接收相加却出现按多次值发现错误这个BUG。
+        原因:
+            因为每次点击传值相加都是取number相加，前面的没有清空。
+
+        解决办法：
+            1、较为复杂的就是通过数据绑定，然后父组件的注册侦听器，然后去改变sum。
+
+            2、其实比较真确的是给每个组件都ref一个名字，因为当我们this.$refs.ref就
+            是指向这个组件，所以我们在传值的时候将触发的父组件的函数变成this.$refs.ref.number
+            相加就好了。
+
+    -->
+    <script>
+
+        let componentA = {
+            template: `<tr><td>{{content}}</td></tr>`,
+            data() {
+                return{
+                    content: "这个是一个row"
+                }
+            }
+        };
+
+        let vm = new Vue({
+            el: "#root",
+            components: {
+                row : componentA
+            }
+        });
+
+        let componentB = {
+            template: `<button @click="change">{{number}}</button>`,
+            data() {
+                return {
+                    number: 0
+                };
+            },
+            methods: {
+                change : function () {
+                    this.number++;
+                    this.$emit("numberchange",this);
+                }
+            }
+        };
+
+        let app = new Vue({
+            el: "#app",
+            components: {
+                componentB : componentB
+            },
+            data: {
+                sum: 0
+            },
+            methods: {
+                sumchange : function (x) {
+                    console.log(x);
+                    console.log(this.$refs.component_one);
+                    console.log(this.$refs.component_two);
+                    this.sum = this.$refs.component_one.number + this.$refs.component_two.number;
+                    // this.sum += x.number
+                }
+            }
+        });
+
+
+    </script>
+</body>
+</html>

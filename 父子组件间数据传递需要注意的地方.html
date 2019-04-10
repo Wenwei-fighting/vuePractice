@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父子组件间数据传递细节</title>
+    <script src="vue.js"></script>
+    <style>
+        button{
+            height: 50px;
+            width: 50px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <out-btn :number="onedata" @number-change="outchange"></out-btn>
+        <out-btn :number="twodata" @number-change="outchange"></out-btn>
+        <p>{{sum}}</p>
+    </div>
+    <script>
+        /*
+        *      需要注意，如果子组件直接操作父组件传来的值会报警告，在
+        *      Vue定义中父子组件间的数据传输是单向数据流，子组件只允许
+        *      接收数据，而不能操作接收的到数据，因为将有可能污染其他组
+        *      对此数据的使用，或者当父组件重新渲染时将被覆盖。
+        *
+        *      解决办法：
+        *      在子组件中的data自己定义一个变量存储父组件传过来的值，然后
+        *      操作这个变量
+        *
+        *
+        *
+        * */
+
+        let componentA = {
+            props : ["number"],
+            template : `<button @click="btnclick">{{outNumber}}</button>`,
+            methods : {
+                btnclick : function () {
+                    this.outNumber++;
+                    this.$emit("number-change",this)
+                }
+            },
+            data() {
+                return{
+                    outNumber : this.number
+                }
+            }
+        };
+
+        let vm = new Vue({
+            el : "#root",
+            data : {
+                onedata : 0,
+                twodata : 0
+            },
+            components : {
+                outBtn : componentA
+            },
+            methods: {
+                outchange : function (x) {
+                    if (x._uid === 1)
+                        this.onedata++;
+                    else
+                        this.twodata++;
+                    // this.content.a++
+                }
+            },
+            computed : {
+                sum : function () {
+                    return this.onedata + this.twodata;
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

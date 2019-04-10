@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件参数校验和非props属性</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+
+    子组件接收父组件传来的值我们可以通过校验来确保属性是我们想要的
+    例如：
+    props: {
+                outdata: {
+                    type: String,                   //父组件传过来值得类型也可以是[String, Number]以数组的形式表示可以为多个类型
+                    required: false,                //是否为必须传值给outdata
+                    default: "我是默认值",           //默认值，如果没有传值则将默认值赋值给outdata
+                    validator: function (value) {   //自定义校验器
+                        return (value.length > 5)   //表示为这个值长度必须大于5
+                        或者是
+                        return t==='xxx' || t==='yyy'   //这样表示为这个值必须匹配字符串的一个
+                    }
+                }
+            }
+
+     所以我们可以从type、required、default、validator中做检验。
+
+     而非props特性就是，props传值后，子组件没有接收会报错，然后就会将属性显示在标签上
+
+
+
+
+-->
+<body>
+    <div id="app">
+        <component-a :outdata="content"></component-a>
+    </div>
+    <script>
+
+        let componentA = {
+            props: {
+                outdata: {
+                    type: String,                   //父组件传过来值得类型
+                    required: false,                //是否为必须传值给outdata
+                    default: "我是默认值",           //默认值，如果没有传值则将默认值赋值给outdata
+                    validator: function (value) {   //自定义校验器
+                        return (value.length > 5)
+                    }
+                }
+            },
+            template: `<p>{{outdata}}</p>`,
+        };
+
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                content: "我是父组件传的值"
+            },
+            components: {
+                componentA : componentA
+            }
+        });
+
+    </script>
+</body>
+</html>

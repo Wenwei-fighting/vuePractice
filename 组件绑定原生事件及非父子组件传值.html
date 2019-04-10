@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件绑定原生事件以及非父子组件传值(Bus/事件总线/发布订阅模式/观察者模式)</title>
+    <script src="vue.js"></script>
+</head>
+<!--
+        通常我们想通触发子组件的事件时，会在子组件内注册事件以及
+        在模板中绑定点击事件。
+        如果想直接使用原生事件，可以通过在使用组件的时候.native
+        来达到效果
+
+
+        先定义组件：
+        let componentA = {
+            template: `<input type="button" :value="content">`,
+            ........
+        };
+        使用组件：
+        <component-a @click.native="btn_click"></component-a>
+        在父组件注册事件：
+        let vm = new Vue({
+            ......
+            components: {
+                componentA : componentA
+            }
+        });
+
+-----------------------------------------------------------------------
+
+        非父子组件传值：使用总线机制
+
+
+
+-->
+<body>
+    <!--<div id="app">-->
+        <!--<component-a @click.native="btn_click"></component-a>-->
+    <!--</div>-->
+    <!--<hr>-->
+    <div id="root">
+        <component-b v-for="(item,index) of list" :outdata="item" :key="index"></component-b>
+    </div>
+    <script>
+        Vue.prototype.bus = new Vue();
+
+        // let componentA = {
+        //     template: `<input type="button" :value="content">`,
+        //     data() {
+        //         return {
+        //             content : "点击"
+        //         }
+        //     }
+        // };
+        //
+        // let vm = new Vue({
+        //     el: "#app",
+        //     methods: {
+        //         btn_click : function () {
+        //             alert("我是原生事件");
+        //         }
+        //     },
+        //     components: {
+        //         componentA : componentA
+        //     }
+        // });
+
+
+
+
+        let componentB = {
+            template: `<div>
+                            <input type="text" v-model="inputValue">
+                            <input type="button" value="提交" @click="handleClick">
+                       </div>`,
+            props: {
+                outdata:{
+                    type: [String,Number],
+                    required: true,
+                    validator: function (value) {
+                        return (value.length < 10)
+                    }
+                }
+            },
+            data() {
+                return {
+                    inputValue : this.outdata
+                }
+            },
+            methods: {
+                handleClick : function () {
+                    this.bus.$emit("change",this.inputValue)
+                }
+            },
+            mounted: function () {
+                let this_ = this;           //改变其指向，将上一次的指向保存下来
+                this.bus.$on("change", function (msg) {
+                    console.log(this_);
+                    this_.inputValue = msg;
+                })
+            }
+        };
+
+        let other = new Vue({
+            el: "#root",
+            components: {
+                componentB : componentB
+            },
+            data: {
+                list:[
+                    '第一条数据123',
+                    '第二条数据456'
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
